@@ -39,7 +39,7 @@ def main():
     ap.add_argument("--since", help="ISO8601, e.g. 2025-11-06T00:00:00Z")
     ap.add_argument("--all-wikis", action="store_true")
     ap.add_argument("--debug", action="store_true")
-    ap.add_argument("--max-rows", type=int, default=1000, help="stop after N produced messages")
+    ap.add_argument("--max-rows", type=int, default=10000, help="stop after N produced messages")
     args = ap.parse_args()
     
     app_name = os.getenv("APP_NAME", "AakashWikimediaSentiment")

@@ -152,9 +152,8 @@ def main():
                     producer.send(args.out_topic, key=key, value=out)
                     processed += 1
 
-                    if args.debug and shown < 5:
+                    if args.debug:
                         print(f"[sentiment] {out['title']} | {label} | {text[:80]}", flush=True)
-                        shown += 1
                     
                     time.sleep(2)
 
