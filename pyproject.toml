@@ -1,0 +1,11 @@
+[project]
+name = "wikimedia-event-sentiment-analysis"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "confluent-kafka>=2.12.2",
+    "kafka-python>=2.2.15",
+    "requests-sse>=0.5.2",
+]

@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+  zookeeper:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: zk
+    environment:
+      - KAFKAHOME=/home
+    command:
+      [
+        "/home/kafka/bin/zookeeper-server-start.sh",
+        "/home/kafka/config/zookeeper.properties",
+      ]
+    ports:
+      - "2181:2181"
+    volumes:
+      - zk-data:/home/kafka/data/zookeeper
+    healthcheck:
+      test: ["CMD-SHELL", "echo ruok | nc -w 2 127.0.0.1 2181 | grep -q imok"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 20s
+
+  broker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: broker
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    environment:
+      - KAFKAHOME=/home
+    command: ["/usr/local/bin/kafka-start"]
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    volumes:
+      - broker-data:/home/kafka/data/server
+    stop_grace_period: 40s
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "/home/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list >/dev/null 2>&1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+
+volumes:
+  zk-data:
+  broker-data:
